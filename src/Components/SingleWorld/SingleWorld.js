@@ -1,39 +1,22 @@
 import React, { useEffect, useState } from "react";
 import './SingleWorld.css';
 import { useParams } from "react-router-dom";
-import { getSingleWorldData } from "../../apiCalls";
+// import { getSingleWorldData } from "../../apiCalls";
 import { Detail } from "../Detail/Detail";
 import { LoadingIcon } from "../LoadingIcon/LoadingIcon";
 import { PageNotFound } from "../PageNotFound/PageNotFound";
 import { Error } from "../Error/Error";
 import { DetailCarousel } from "../Detail/DetailCarousel";
+import { useSelector } from 'react-redux/es/hooks/useSelector';
 
 export const SingleWorld = () => {
   const { id } = useParams(),
-        [world, setWorld] = useState({}),
-        [isLoading, setIsLoading] = useState(true),
+        world = useSelector(state => state.root.discoveredWorlds.find(world=> world.id === +id)),
+        [isLoading, setIsLoading] = useState(false),
         [error, setError] = useState(false),
         [wrongPath, setWrongPath] = useState(false),
-        [currentTab, setCurrentTab] = useState('');
+        [currentTab, setCurrentTab] = useState('History');
 
-  useEffect(() => {
-    getSingleWorldData(id)
-      .then((data) => {
-        setWorld(data);
-        setCurrentTab('Inhabitants');
-        setIsLoading(false);
-      })
-      .catch((res) => {
-        if (res.message === "404") {
-          setWrongPath(true)
-          setError(false)
-        } else {
-          setError(true)
-          setWrongPath(false)
-        }
-        setIsLoading(false);
-      })
-  }, [id]);
 
   if (isLoading) {
     return <LoadingIcon />;
@@ -140,7 +123,7 @@ export const SingleWorld = () => {
   return (
     <section className="single-world-view">
       <div className="single-top">
-        <img className="world-img" src={world.imgs.landscapes[2]} alt={`${world.name}`} />
+        <img className="world-img" src={world.img.landscape} alt={`${world.name}`} />
         <div className="single-top-wrapper">
           <h2>{world.name}</h2>
           <div className="single-geo">

@@ -16,6 +16,8 @@ export const WorldBrowser = () => {
         error = useSelector(state => state.root.error),
         history = useHistory();
 
+  console.log(displayedWorlds.forEach(world=> console.log(world.genres)))
+  
   const routeToWorld = id => {
     const worldView = `world/${id}`;
     history.push(worldView);
@@ -23,14 +25,15 @@ export const WorldBrowser = () => {
   };
 
   const makeFilteredArray = category => {
-    return displayedWorlds.filter(world => world.category === category);
+    console.log(category, displayedWorlds)
+    return displayedWorlds.filter(world => world.genres.includes(category));
   };
 
-  const carouselPreviews = ['Fantasy & Mystical',
-                            'Futuristic & Tech',
-                            'Nature & Environment',
-                            'Urban & Modern',
-                            'Miscellaneous & Niche'
+  const carouselPreviews = ['Retro-Futurism',
+                            'Post-Apocalyptic',
+                            'Surrealism',
+                            'Fantasy',
+                            'Alien'
                           ].map((category, index) => 
                             <Carousel
                               category={category}
@@ -40,10 +43,10 @@ export const WorldBrowser = () => {
                               />
                             );
 
-  const mainPreviewWorlds = [1, 96, 107, 100, 93].map(id => {
+  const mainPreviewWorlds = [1, 70, 90, 100, 93].map(id => {
     return displayedWorlds.find(world => world.id === id);
   });
-
+  console.log('main carousel previews:', mainPreviewWorlds)
   if (useLocation().pathname !== '/worlds') {
     return <PageNotFound />;
   } else if (loading) {
